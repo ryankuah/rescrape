@@ -1,4 +1,5 @@
 import "~/styles/globals.css";
+import { signIn, auth } from "@/auth";
 
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
@@ -9,11 +10,34 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+  const session = await auth();
+  if (!session) {
+    return (
+      <html lang="en" className={`${GeistSans.variable}`}>
+        <body>
+          <form
+            action={async () => {
+              "use server";
+              await signIn("google");
+            }}
+          >
+            <button type="submit">Signin with Google</button>
+          </form>
+        </body>
+      </html>
+    );
+  }
   return (
     <html lang="en" className={`${GeistSans.variable}`}>
+      <head>
+        <link
+          href="https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.css"
+          rel="stylesheet"
+        />
+      </head>
       <body>{children}</body>
     </html>
   );

@@ -7,6 +7,7 @@ import {
   text,
   timestamp,
   varchar,
+  numeric,
 } from "drizzle-orm/pg-core";
 import { type AdapterAccount } from "next-auth/adapters";
 
@@ -18,26 +19,66 @@ import { type AdapterAccount } from "next-auth/adapters";
  */
 export const createTable = pgTableCreator((name) => `rescrape_${name}`);
 
-export const posts = createTable(
-  "post",
-  {
-    id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
-    name: varchar("name", { length: 256 }),
-    createdById: varchar("created_by", { length: 255 })
-      .notNull()
-      .references(() => users.id),
-    createdAt: timestamp("created_at", { withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-      () => new Date()
-    ),
-  },
-  (example) => ({
-    createdByIdIdx: index("created_by_idx").on(example.createdById),
-    nameIndex: index("name_idx").on(example.name),
-  })
-);
+export const properties = createTable("properties", {
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+  name: varchar("name", { length: 256 }),
+  street: varchar("street", { length: 256 }),
+  city: varchar("city", { length: 256 }),
+  state: varchar("state", { length: 256 }),
+  zip: integer("zip"),
+  source: varchar("source", { length: 256 }),
+  longitude: numeric("longitude"),
+  latitude: numeric("latitude"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+    () => new Date(),
+  ),
+});
+
+export const propertyInfo = createTable("property_info", {
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+  key: varchar("key", { length: 256 }),
+  value: varchar("value", { length: 256 }),
+  propertyId: integer("property_id")
+    .notNull()
+    .references(() => properties.id),
+});
+
+export const propertiesRelations = relations(properties, ({ one, many }) => ({
+  propertyInfo: many(propertyInfo), // One property can have many propertyInfo rows
+}));
+
+export const propertyInfoRelations = relations(propertyInfo, ({ one }) => ({
+  property: one(properties, {
+    fields: [propertyInfo.propertyId], // Foreign key in `propertyInfo`
+    references: [properties.id], // Primary key in `properties`
+  }),
+}));
+
+export const states = createTable("state", {
+  id: integer("id").primaryKey().notNull(),
+  name: varchar("name", { length: 256 }),
+});
+
+export const counties = createTable("county", {
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+  countyid: integer("county_id").notNull(),
+  name: varchar("name", { length: 256 }),
+  stateId: integer("state_id")
+    .notNull()
+    .references(() => states.id),
+});
+
+export const countyStats = createTable("county_stats", {
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+  countyId: integer("county_id")
+    .notNull()
+    .references(() => counties.id),
+  key: varchar("key", { length: 256 }),
+  value: varchar("value", { length: 256 }),
+});
 
 export const users = createTable("user", {
   id: varchar("id", { length: 255 })
@@ -83,7 +124,7 @@ export const accounts = createTable(
       columns: [account.provider, account.providerAccountId],
     }),
     userIdIdx: index("account_user_id_idx").on(account.userId),
-  })
+  }),
 );
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
@@ -106,7 +147,7 @@ export const sessions = createTable(
   },
   (session) => ({
     userIdIdx: index("session_user_id_idx").on(session.userId),
-  })
+  }),
 );
 
 export const sessionsRelations = relations(sessions, ({ one }) => ({
@@ -125,5 +166,5 @@ export const verificationTokens = createTable(
   },
   (vt) => ({
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
-  })
+  }),
 );
