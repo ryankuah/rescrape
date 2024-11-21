@@ -38,7 +38,7 @@ export const env = createEnv({
     AUTH_SECRET: process.env.AUTH_SECRET,
     AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
     AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
-    DATABASE_URL: process.env.DATABASE_URL,
+    DATABASE_URL: process.env.POSTGRES_URL,
     NODE_ENV: process.env.NODE_ENV,
     BROWSERBASE_API_KEY: process.env.BROWSERBASE_API_KEY,
     MAPBOX_API_KEY: process.env.MAPBOX_API_KEY,
