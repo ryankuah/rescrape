@@ -3,6 +3,7 @@ import { db } from "@/db";
 export default async function Page() {
   const properties = await db.query.properties.findMany({
     columns: {
+      //hi
       id: true,
       name: true,
     },
