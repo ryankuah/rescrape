@@ -39,7 +39,7 @@ export async function scrapeCrexi() {
   //   browserWSEndpoint: `wss://connect.browserbase.com?apiKey=${env.BROWSERBASE_API_KEY}`,
   // });
   // } else {
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch({ headless: true });
   // }
   const page = await browser.newPage();
   await page.goto("https://www.crexi.com/properties?sort=New%20Listings", {

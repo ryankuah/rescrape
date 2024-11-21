@@ -22,11 +22,9 @@ export default function MapComponent({
         zoom,
       }}
       style={{ width: "50vw", height: "50vh" }}
-      mapStyle="mapbox://styles/mapbox/dark-v11"
+      mapStyle="mapbox://styles/mapbox/standard-satellite"
     >
-      <Marker longitude={longitude} latitude={latitude}>
-        <FaMapPin />
-      </Marker>
+      <Marker longitude={longitude} latitude={latitude}></Marker>
     </Map>
   );
 }
