@@ -63,7 +63,7 @@ export default function MapComponent({
 
   const [propertyOg, setPropertyOg] = useState<Property[]>(propertyArr);
   const [properties, setProperty] = useState<Property[]>(propertyOg);
-  const [sort, setSort] = useState("shortlist");
+  const [sort, setSort] = useState("all");
 
   useEffect(() => {
     switch (sort) {

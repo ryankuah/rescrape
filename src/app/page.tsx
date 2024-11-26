@@ -29,6 +29,8 @@ export default async function Page() {
     },
   })) as unknown as Property[];
 
+  console.log(properties);
+
   return (
     <div className="m-8 flex h-screen w-screen flex-col overflow-clip">
       <h1 className="text-4xl font-bold">Properties</h1>
