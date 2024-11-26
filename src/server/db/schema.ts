@@ -29,6 +29,7 @@ export const properties = createTable("properties", {
   source: varchar("source", { length: 256 }),
   longitude: numeric("longitude"),
   latitude: numeric("latitude"),
+  status: varchar("status", { length: 256 }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
     .notNull(),

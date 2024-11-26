@@ -79,7 +79,6 @@ export default async function Page({
           <Map
             latitude={Number(property.latitude) ?? 42.09833}
             longitude={Number(property.longitude) ?? -79.22119}
-            zoom={14}
             apiKey={env.MAPBOX_API_KEY}
           />
           {countyData ? (

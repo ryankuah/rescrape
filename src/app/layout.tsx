@@ -38,7 +38,7 @@ export default async function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body className="h-screen w-screen">{children}</body>
     </html>
   );
 }
